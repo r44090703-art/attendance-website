@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School Attendance System</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1e88e5">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-512.png">
+</head>
+<body>
+  <header>
+    <h1>📘 School Attendance System</h1>
+  </header>
+
+  <main>
+    <!-- Teacher Login -->
+    <section id="login-section">
+      <h2>Teacher Login</h2>
+      <input type="text" id="teacherName" placeholder="Enter Teacher Name">
+      <button onclick="loginTeacher()">Login</button>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="hidden">
+      <h2 id="welcome"></h2>
+
+      <!-- Add Student -->
+      <div class="card">
+        <h3>Add Student</h3>
+        <input type="text" id="studentName" placeholder="Enter Student Name">
+        <button onclick="addStudent()">Add</button>
+      </div>
+
+      <!-- Attendance Table -->
+      <div class="card">
+        <h3>Mark Attendance</h3>
+        <table id="attendanceTable">
+          <thead>
+            <tr>
+              <th>Student Name</th>
+              <th>Present</th>
+              <th>Absent</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <button onclick="saveAttendance()">💾 Save Attendance</button>
+        <button onclick="exportToExcel()">⬇️ Export to Excel</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Modern School System</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log("✅ Service Worker Registered"))
+        .catch(err => console.log("Service Worker Error:", err));
+    }
+  </script>
+</body>
+</html>
+

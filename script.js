@@ -1,73 +1,91 @@
 let students = JSON.parse(localStorage.getItem("students")) || [];
-let teacher = localStorage.getItem("teacher") || "";
+let attendance = JSON.parse(localStorage.getItem("attendance")) || []; 
+// {name, date, status}
 
-function loginTeacher() {
-  const name = document.getElementById("teacherName").value;
-  if (name.trim() === "") {
-    alert("Enter teacher name!");
-    return;
-  }
-  teacher = name;
-  localStorage.setItem("teacher", teacher);
-  document.getElementById("welcome").innerText = `Welcome, ${teacher}`;
-  document.getElementById("login-section").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
-  renderStudents();
+function saveData() {
+  localStorage.setItem("students", JSON.stringify(students));
+  localStorage.setItem("attendance", JSON.stringify(attendance));
+}
+
+function renderStudents() {
+  const table = document.getElementById("studentTable");
+  table.innerHTML = "";
+  students.forEach((student, index) => {
+    let row = `
+      <tr>
+        <td>${student}</td>
+        <td>-</td>
+        <td>
+          <button onclick="markAttendance(${index}, 'Present')">Present</button>
+          <button onclick="markAttendance(${index}, 'Absent')">Absent</button>
+		  <button onclick="markAttendance(${index}, 'Leave')">Leave</button>
+        </td>
+      </tr>
+    `;
+    table.innerHTML += row;
+  });
+}
+
+function renderRecords() {
+  const table = document.getElementById("recordTable");
+  table.innerHTML = "";
+  attendance.forEach(record => {
+    let row = `
+      <tr>
+        <td>${record.name}</td>
+        <td>${record.date}</td>
+        <td>${record.status}</td>
+      </tr>
+    `;
+    table.innerHTML += row;
+  });
 }
 
 function addStudent() {
   const name = document.getElementById("studentName").value;
-  if (name.trim() === "") {
-    alert("Enter student name!");
-    return;
-  }
-  students.push({ name, status: "" });
-  localStorage.setItem("students", JSON.stringify(students));
-  document.getElementById("studentName").value = "";
+  if(name.trim() === "") return alert("Enter a name!");
+  students.push(name);
+  saveData();
   renderStudents();
+  document.getElementById("studentName").value = "";
 }
 
-function renderStudents() {
-  const tbody = document.querySelector("#attendanceTable tbody");
-  tbody.innerHTML = "";
-  students.forEach((student, index) => {
-    const row = `
-      <tr>
-        <td>${student.name}</td>
-        <td><input type="radio" name="status${index}" value="Present" ${student.status==="Present"?"checked":""}></td>
-        <td><input type="radio" name="status${index}" value="Absent" ${student.status==="Absent"?"checked":""}></td>
-      </tr>
-    `;
-    tbody.innerHTML += row;
-  });
+function markAttendance(index, status) {
+  const date = document.getElementById("date").value;
+  if(!date) return alert("Please select a date!");
+
+  const student = students[index];
+
+  // prevent duplicate entries for same student/date
+  const exists = attendance.find(r => r.name === student && r.date === date);
+  if(exists) {
+    exists.status = status; // update if already marked
+  } else {
+    attendance.push({ name: student, date: date, status: status });
+  }
+
+  saveData();
+  renderRecords();
 }
 
-function saveAttendance() {
-  students.forEach((student, index) => {
-    const status = document.querySelector(`input[name="status${index}"]:checked`);
-    student.status = status ? status.value : "";
-  });
-  localStorage.setItem("students", JSON.stringify(students));
-  alert("Attendance saved!");
-}
-
-function exportToExcel() {
-  if (students.length === 0) {
-    alert("No data to export!");
+// ✅ Export to CSV (Excel readable)
+function exportCSV() {
+  if(attendance.length === 0) {
+    alert("No attendance records to export!");
     return;
   }
-  const worksheet = XLSX.utils.json_to_sheet(students);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Attendance");
-  XLSX.writeFile(workbook, "Attendance.xlsx");
+
+  let csv = "Name,Date,Status\n";
+  attendance.forEach(record => {
+    csv += `${record.name},${record.date},${record.status}\n`;
+  });
+
+  const blob = new Blob([csv], { type: "text/csv" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "attendance_records.csv";
+  link.click();
 }
 
-// Auto login if teacher already exists
-window.onload = () => {
-  if (teacher) {
-    document.getElementById("welcome").innerText = `Welcome, ${teacher}`;
-    document.getElementById("login-section").classList.add("hidden");
-    document.getElementById("dashboard").classList.remove("hidden");
-    renderStudents();
-  }
-};
+renderStudents();
+renderRecords();

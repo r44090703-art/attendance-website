@@ -1,86 +1,68 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Segoe UI", sans-serif;
-}
-
 body {
-  background: #f5f7fa;
+  font-family:'Arial, sans-serif'
+  margin: 20px;
+  background: #f4f4f9;
+}
+h2 {
+  text-align: center;
   color: #333;
 }
-
-header {
-  background: #1e88e5;
-  color: white;
-  text-align: center;
-  padding: 1rem;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-}
-
-main {
-  width: 90%;
-  max-width: 900px;
-  margin: 2rem auto;
-}
-
-h2, h3 {
-  margin-bottom: 0.5rem;
-}
-
-.card {
+.container {
+  max-width: 700px;
+  margin: auto;
   background: white;
-  padding: 1rem;
+  padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  margin: 1rem 0;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
 }
-
-input, button {
-  padding: 0.8rem;
-  margin: 0.4rem 0;
+input, button, select {
+  margin: 5px 0;
+  padding: 10px;
+  width: 100%;
   border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
+  border-radius: 5px;
 }
-
-button {
-  background: #1e88e5;
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-button:hover {
-  background: #0d47a1;
-}
-
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
-  display: block;
-  overflow-x: auto;
-  white-space: nowrap;
+  margin-top: 15px;
 }
-
 th, td {
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
+  padding: 10px;
   text-align: center;
-  padding: 0.6rem;
-  font-size: 0.9rem;
 }
-
-.hidden {
-  display: none;
-}
-
-footer {
-  text-align: center;
-  padding: 1rem;
+th {
   background: #eee;
-  margin-top: 2rem;
-  border-top: 1px solid #ccc;
+}
+.btn {
+  background: #28a745;
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.btn:hover {
+  background: #218838;
 }
 
+@media (max-width: 600px) {
+  h2 {
+    font-size: 20px;
+  }
+  .container {
+    width: 100%;
+    padding: 10px;
+    border-radius: 0;
+    min-height: 100vh; /* full screen height on mobile */
+  }
+  input, button, select {
+    font-size: 14px;
+    padding: 10px;
+  }
+  table {
+    font-size: 12px;
+  }
+  th, td {
+    padding: 8px;
+  }
+}
